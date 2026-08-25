@@ -1,0 +1,10 @@
+[project]
+name = "ttfa"
+version = "0.0.1"
+description = "Time-to-first-audio primitives. Cut first, serve later."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
