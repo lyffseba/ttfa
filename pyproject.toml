@@ -1,10 +1,17 @@
 [project]
 name = "ttfa"
-version = "0.0.1"
-description = "Time-to-first-audio primitives. Cut first, serve later."
+version = "0.1.0"
+description = "Time-to-first-audio: silence / chunk-boundary kernel"
 readme = "README.md"
-requires-python = ">=3.11"
-license = { text = "Apache-2.0" }
+requires-python = ">=3.10"
+authors = [{ name = "lyffseba" }]
 
-[tool.pytest.ini_options]
-testpaths = ["tests"]
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+ttfa = ["*.mojo"]

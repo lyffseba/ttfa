@@ -1,19 +1,37 @@
 # ttfa
 
-Time-to-first-audio.
+Time-to-first-audio. **v0 is the silence / chunk-boundary kernel only.**
 
-**v0 is a cut primitive, not a speech server.** A Mojo RMS kernel is not a product. MAX 26.5.0 ships no TTS catalog. The live baseline is vLLM-Omni on Qwen3-TTS (published 64 ms first-packet on H200). We do not chase Inworld vs vLLM 0.9.1.
+Streaming TTS concatenates PCM at a *non-voicing* point (Inworld TTS-1 §5.1):
+search the last fixed-radius window with `max(|x|) < eps`, emit through that
+center, keep the leftover. No cut → defer the whole buffer (`cut = -1`).
 
 ## Run
 
 ```bash
-python3 -m pytest tests/test_silence.py -q
+git clone https://github.com/lyffseba/ttfa.git && cd ttfa
+PYTHONPATH=src python -m unittest tests.test_silence -v
 ```
 
-No extra deps. `src/ttfa/ref.py` is the source of truth. `src/ttfa/silence.mojo` is the same contract in Mojo 1.0 for when a profiler says the cut sits on a device-to-host of the first PCM byte. Until then, do not call Mojo from Python in a loop.
+Optional Mojo 1.0 kernel (CPU SIMD, no PythonObject in the loop):
 
-## What v1 actually is
+```bash
+uv pip install mojo          # or: pixi add mojo
+mojo src/ttfa/silence.mojo   # smoke: all-zero buffer prints cut leftover
+```
 
-See [DESIGN.md](DESIGN.md). Short version: one open Qwen3-TTS, two-knob chunking, raw PCM, NVIDIA, same-box bench against Omni. No custom scheduler. No Mojo until `nsys` names the hop.
+If `mojo` is not installed, the `.mojo` source still lands; the Python
+reference is the correctness baseline.
 
-Bar, not a claim: first packet ≤ 250 ms of audio, and time-to-2.0 s delivered as a *separate* clock. WER/click/onset gates so latency cannot be bought with garbage.
+## v0 vs v1
+
+| | v0 (this) | v1 (not this repo yet) |
+|---|---|---|
+| What | silence cut + leftover | MAX graph + CSM-1B + Mimi + `POST /v1/audio/speech` |
+| Weights | none | none in-tree (caller supplies) |
+| Server / codec | no | yes, later |
+
+**Inworld bar (target, not a claim):** 200 ms first chunk; ~70% faster first 2 s
+vs vLLM 0.9.1 on B200. v0 does not measure that.
+
+Apache-2.0 (see `LICENSE`). No second license, no HF weights, no Inworld code.

@@ -1,5 +1,5 @@
-"""ttfa: time-to-first-audio primitives."""
+"""Time-to-first-audio: silence / chunk-boundary kernel (v0)."""
 
-from ttfa.ref import Cut, find_cut
+from ttfa.ref import cut_and_leftover, find_cut, leftover_start
 
-__all__ = ["Cut", "find_cut"]
+__all__ = ["cut_and_leftover", "find_cut", "leftover_start"]

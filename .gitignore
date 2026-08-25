@@ -1,4 +1,11 @@
-.venv/
 __pycache__/
-*.pyc
+*.py[cod]
+.venv/
+.pixi/
+*.egg-info/
+dist/
+build/
+.mojo_cache/
+*.mojopkg
+*.mojoc
 .pytest_cache/
