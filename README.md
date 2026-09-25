@@ -24,3 +24,7 @@ mojo src/ttfa/silence.mojo
 See [DESIGN.md](DESIGN.md). Short version: one open Qwen3-TTS, two-knob chunking, raw PCM, NVIDIA, same-box bench against Omni. No custom scheduler. No Mojo until `nsys` names a device-to-host on the first PCM byte.
 
 Bar, not a claim: first packet ≤ 250 ms of audio, and time-to-2.0 s delivered as a *separate* clock. WER / click / onset so latency cannot be bought with garbage.
+
+## Stack
+
+Pins for the Python package, the unittest suite, and the optional Mojo twin: [docs/STACK.md](docs/STACK.md).
